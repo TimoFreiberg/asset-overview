@@ -3,7 +3,8 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [clojure.pprint :refer [pprint]]
-            [hiccup.core :as hic]))
+            [hiccup.core :as hic]
+            [hickory.core :as hick]))
 
 (defn mk-example-project
   [id]
