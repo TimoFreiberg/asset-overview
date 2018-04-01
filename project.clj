@@ -5,8 +5,9 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.5.1"]
                  [ring/ring-defaults "0.2.1"]
-                 [hiccup "1.0.5"]
-                 [hickory "0.7.1"]]
+                 [irresponsible/thyroid "0.1.0"]
+                 [org.clojure/tools.logging "0.4.0"]
+                 [ch.qos.logback/logback-classic "1.1.3"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler asset-overview.handler/app}
   :profiles

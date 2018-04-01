@@ -2,9 +2,7 @@
   (:require [compojure.core :as comp]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [clojure.pprint :refer [pprint]]
-            [hiccup.core :as hic]
-            [hickory.core :as hick]))
+            [irresponsible.thyroid :as thyroid]))
 
 (defn mk-example-project
   [id]
@@ -18,9 +16,6 @@
    :artifacts ["Test-Core" "Test-Utils" "Test-Compat"]
    :legacy false})
 
-(defn pprint-str [& rest]
-  (with-out-str (pprint rest)))
-
 (defn get-all-projects
   "Loads all projects from the repository."
   []
@@ -33,12 +28,24 @@
   [id]
   (mk-example-project id))
 
+(def thymeleaf-resolver
+  (thyroid/template-resolver
+   {:type :file
+    :prefix "resources/templates"
+    :suffix ".html"
+    :cache false}))
+
+(def thymeleaf-engine
+  (thyroid/make-engine {:resolvers [thymeleaf-resolver]}))
+
 (defn display-project [project]
-  (pprint-str project))
+  (thyroid/render
+   thymeleaf-engine
+   "project.html"
+   {:project project}))
 
 (defn display-projects [projects]
-  (pprint-str
-   (mapv display-project projects)))
+  (mapv display-project projects))
 
 (comp/defroutes app-routes
   (comp/GET "/" [] (display-projects
