@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Overview of ' + ${project.name}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/style.css"
+            th:href="@{/css/style.css}"
+            rel="stylesheet" media="screen"/>
+</head>
+<body>
+
+<h1 th:text="${project.name}"></h1>
+
+<hr/>
+
+<!-- GitHub Repository Link -->
+<a th:href="'https://github.com/' + ${project.organization} + '/' + ${project.repository}" target="_blank">
+    <img src="https://img.shields.io/badge/repository-GitHub-blue.svg">
+</a>
+<!-- Documentation Link -->
+<a th:href="${project.documentation}" th:if="${render_documentation}" target="_blank">
+    <img src="https://img.shields.io/badge/documentation-Online-green.svg">
+</a>
+<!-- GitHub Release Badge -->
+<a th:href="'https://github.com/' + ${project.organization} + '/' + ${project.repository} + '/releases'" target="_blank">
+    <img th:src="'https://badge.fury.io/gh/' + ${project.organization} + '%2F' + ${project.repository} + '.svg'">
+</a>
+
+<hr/>
+
+<div th:if="${render_ci}">
+    <h2>Continuous Integration</h2>
+    <p>The following table shows all of the project's maintained branches / versions with build status and quality metrics.</p>
+    <table>
+        <tr>
+            <th>Branch</th>
+            <th th:if="${render_travis}">Build</th>
+            <th th:if="${render_codecov}">Coverage</th>
+            <th th:if="${render_bettercode}">Better Code</th>
+        </tr>
+        <tr th:each="branch : ${project.branches}">
+            <td th:text="${branch}"></td>
+            <td th:if="${render_travis}">
+                <!-- Travis CI Build Badge -->
+                <a th:href="'https://travis-ci.org/' + ${project.organization} + '/' + ${project.repository} + '/branches'"
+                        target="_blank">
+                    <img th:src="'https://travis-ci.org/' + ${project.organization} + '/' + ${project.repository} + '.svg?branch=' + ${branch}">
+                </a>
+            </td>
+            <td th:if="${render_codecov}">
+                <!-- Codecov Badge -->
+                <a th:href="'https://codecov.io/gh/' + ${project.organization} + '/' + ${project.repository} + '/branch/' + ${branch}"
+                        target="_blank">
+                    <img th:src="'https://codecov.io/gh/' + ${project.organization} + '/' + ${project.repository} + '/branch/' + ${branch} + '/graph/badge.svg'">
+                </a>
+            </td>
+            <td th:if="${render_bettercode}">
+                <!-- Better Code Hub Badge -->
+                <a th:href="'https://bettercodehub.com/results/' + ${project.organization} + '/' + ${project.repository} + '/'"
+                        target="_blank">
+                    <img th:src="'https://bettercodehub.com/edge/badge/' + ${project.organization} + '/' + ${project.repository} + '?branch=' + ${branch}">
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div th:if="${render_artifacts}">
+    <h2>Artifacts</h2>
+    <p>The following table shows all of the project's available modules.</p>
+    <table>
+        <tr>
+            <th>Artifact</th>
+            <th>Maven Central</th>
+            <th>JavaDoc</th>
+            <th>Dependencies</th>
+        </tr>
+        <tr th:each="artifact : ${project.artifacts}">
+            <td th:text="${artifact.artifactId}"></td>
+            <td>
+                <!-- Maven Central Version Badge -->
+                <a th:href="'https://maven-badges.herokuapp.com/maven-central/' + ${artifact.groupId} + '/' + ${artifact.artifactId}"
+                        target="_blank">
+                    <img th:src="'https://maven-badges.herokuapp.com/maven-central/' + ${artifact.groupId} + '/' + ${artifact.artifactId} + '/badge.svg'">
+                </a>
+            </td>
+            <td>
+                <!-- JavaDoc Version Badge -->
+                <a th:href="'https://www.javadoc.io/doc/' + ${artifact.groupId} + '/' + ${artifact.artifactId}"
+                        target="_blank">
+                    <img th:src="'https://www.javadoc.io/badge/' + ${artifact.groupId} + '/' + ${artifact.artifactId} + '.svg'">
+                </a>
+            </td>
+            <td>
+                <!-- Dependency Analyse Badge -->
+                <a th:href="'https://www.versioneye.com/java/' + ${artifact.groupId} + ':' + ${artifact.artifactId} + '/'"
+                        target="_blank">
+                    <img th:src="'https://www.versioneye.com/java/' + ${artifact.groupId} + ':' + ${artifact.artifactId} + '/badge?style=flat'">
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

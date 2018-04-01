@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Overview of Assets</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="../static/css/style.css"
+          th:href="@{/css/style.css}"
+          rel="stylesheet" media="screen"/>
+</head>
+<body>
+
+<h1>List of Current Projects:</h1>
+
+<ul>
+    <li th:each="project : ${projects}">
+        <a th:href="'/' + ${project.id}" th:text="${project.name}">example</a>
+    </li>
+</ul>
+
+<h1>List of Maintenance and Legacy Projects:</h1>
+
+<ul>
+    <li th:each="project : ${legacyProjects}">
+        <a th:href="'/' + ${project.id}" th:text="${project.name}">example</a>
+    </li>
+</ul>
+
+</body>
+</html>
