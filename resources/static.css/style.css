@@ -1,0 +1,39 @@
+body {
+    background-color: #fafafa;
+    font-family: "Verdana", "Arial", "Sans-serif", serif;
+    font-size: 16px;
+    padding: 30px 35px;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+table {
+    border: 1px solid #666666;
+    background-color: #ffffff;
+}
+
+th {
+    padding: 5px 5px 10px;
+    text-decoration: underline;
+}
+
+td {
+    padding: 5px 10px;
+}
+
+hr {
+    border-top: 1px solid #8c8b8b;
+}
