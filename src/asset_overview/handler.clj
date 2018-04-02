@@ -2,7 +2,8 @@
   (:require [compojure.core :as comp]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [irresponsible.thyroid :as thyroid]))
+            [irresponsible.thyroid :as thyroid]
+            [clojure.java.io :as io]))
 
 (defn mk-example-project
   [id]
@@ -16,6 +17,13 @@
    :artifacts ["Test-Core" "Test-Utils" "Test-Compat"]
    :legacy false})
 
+(defn repository
+  [config]
+  (assert
+   (and (map? config)
+        (get-in config [:git :repository-url])))
+  {:config config :data nil})
+
 (defn get-all-projects
   "Loads all projects from the repository."
   []
@@ -23,10 +31,23 @@
    (mk-example-project 1)])
 
 (defn get-project
-  "Loads project with id `id` from the repository.
+  "Loads project with the given id from the repository.
   Returns nil if no project with that id exists."
   [id]
   (mk-example-project id))
+
+(defn load-config
+  "Loads the resource config.edn.
+  Throws an exception if the resource was not found. "
+  []
+  (let [config-file-name "config.edn"]
+    (with-open
+      [reader (if-let [resource (io/resource config-file-name)]
+                (-> resource
+                    io/reader
+                    java.io.PushbackReader.)
+                (throw (Exception. (str "Resource " config-file-name " not found"))))]
+      (clojure.edn/read reader))))
 
 (def thymeleaf-resolver
   (thyroid/template-resolver

@@ -7,7 +7,8 @@
                  [ring/ring-defaults "0.2.1"]
                  [irresponsible/thyroid "0.1.0"]
                  [org.clojure/tools.logging "0.4.0"]
-                 [ch.qos.logback/logback-classic "1.1.3"]]
+                 [ch.qos.logback/logback-classic "1.1.3"]
+                 [clj-jgit "0.8.10"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler asset-overview.handler/app}
   :profiles
