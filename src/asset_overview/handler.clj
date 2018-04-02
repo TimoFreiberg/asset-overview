@@ -39,16 +39,21 @@
 
 (defstate cloned-project
   :start (let
-             [dir (doto
-                      (java.nio.file.Files/createTempDirectory
-                       "asset-overview-data")
-                    .toFile
-                    .deleteOnExit)
-              git ()]
-           (clone-repo)))
+             [temp-repo-dir (->
+                             (java.nio.file.Files/createTempDirectory
+                              "asset-overview-data"
+                              (into-array java.nio.file.attribute.FileAttribute []))
+                             .toFile
+                             io/file)
+              _ (.deleteOnExit temp-repo-dir)
+              remote-url (get-in config [:git :repository-url])
+              _ (-> remote-url
+                    (git/git-clone-full temp-repo-dir)
+                    :repo (git/git-checkout "master"))]
+           (file-seq temp-repo-dir)))
 
-(defstate repository
-  :start {:repo (clone-repo (get-in config [:git :repository-url]))})
+(defstate up-to-date-repository
+  :start {:repo {}})
 
 (defn get-all-projects
   "Loads all projects from the repository."
