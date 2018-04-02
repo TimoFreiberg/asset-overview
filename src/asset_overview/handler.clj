@@ -45,7 +45,10 @@
    {:project project}))
 
 (defn display-projects [projects]
-  (mapv display-project projects))
+  (thyroid/render
+   thymeleaf-engine
+   "index.html"
+   {:projects projects}))
 
 (comp/defroutes app-routes
   (comp/GET "/" [] (display-projects
