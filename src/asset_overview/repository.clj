@@ -14,7 +14,7 @@
                        []))
                      .toFile
                      io/file)
-        _ .deleteOnExit temp-dir]
+        _ (.deleteOnExit temp-dir)]
     temp-dir))
 
 (defstate
