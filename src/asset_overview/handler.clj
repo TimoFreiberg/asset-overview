@@ -94,21 +94,21 @@
 (defn get-all-projects
   "Loads all projects from the repository."
   []
-  [(mk-example-project 0)
-   (mk-example-project 1)])
+  (get-filtered-projects (fn [_] true)))
 
 (defn get-project
   "Loads project with the given id from the repository.
   Returns nil if no project with that id exists."
   [id]
-  (mk-example-project id))
+  (first
+   (get-filtered-projects #(= id (:id %)))))
 
 (def thymeleaf-resolver
   (thyroid/template-resolver
    {:type :file
     :prefix "resources/templates"
     :suffix ".html"
-    :cache false}))
+    :cache? false}))
 
 (def thymeleaf-engine
   (thyroid/make-engine {:resolvers [thymeleaf-resolver]}))
@@ -123,11 +123,11 @@
   (thyroid/render
    thymeleaf-engine
    "index.html"
-   {:projects projects}))
+   {:projects (remove :legacy projects)
+    :legacyProjects (filter :legacy projects)}))
 
 (comp/defroutes app-routes
-  (comp/GET "/" [] (-> get-all-projects
-                       display-projects))
+  (comp/GET "/" [] (display-projects (get-all-projects)))
   (comp/GET "/:id" [id] (-> id
                             get-project
                             display-project))
@@ -135,4 +135,3 @@
 
 (def app
   (wrap-defaults app-routes site-defaults))
-
