@@ -38,7 +38,9 @@
 (defstate config
   :start (load-config "config.edn"))
 
-(defstate cloned-project
+(defstate
+  ^{:on-reload :noop}
+  git-repo
   :start (let
              [temp-repo-dir (->
                              (java.nio.file.Files/createTempDirectory
@@ -48,13 +50,35 @@
                              io/file)
               _ (.deleteOnExit temp-repo-dir)
               remote-url (get-in config [:git :repository-url])
-              _ (-> remote-url
-                    (git/git-clone-full temp-repo-dir)
-                    :repo (git/git-checkout "master"))]
-           (file-seq temp-repo-dir)))
+              repo (-> remote-url
+                       (git/git-clone-full temp-repo-dir)
+                       :repo)]
+           {:repo repo
+            :dir temp-repo-dir})
+  :stop (io/delete-file (:dir git-repo)))
 
-(defstate up-to-date-repository
-  :start {:repo {}})
+(defstate
+  ^{:on-reload :noop}
+  repo-data
+  :start (do
+           (doto (git-repo :repo)
+             (git/git-fetch "origin")
+             (git/git-checkout "master"))
+           (-> git-repo
+               :dir
+               file-seq)))
+
+(defn trim-extension
+  "Returns the file name of a file without its extension.
+  Does nothing to file names without an extension
+  "
+  [file]
+  (let [file-name (.getName file)
+        dot-pos (.lastIndexOf file-name ".")]
+    (if (pos? dot-pos)
+      (subs file-name 0 dot-pos)
+      file-name)))
+
 (defn get-filtered-projects
   "Loads projects from the repository that match the given predicate"
   [pred]
