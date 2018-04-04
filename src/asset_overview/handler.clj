@@ -9,18 +9,6 @@
             [clj-jgit.porcelain :as git]
             [cheshire.core :as json]))
 
-(defn mk-example-project
-  [id]
-  {:id id
-   :name "Test-Project"
-   :organization "NovaTec GmbH"
-   :repository "some-url.com"
-   :documentation "No"
-   :branches ["master" "release-1"]
-   :services []
-   :artifacts ["Test-Core" "Test-Utils" "Test-Compat"]
-   :legacy false})
-
 (defn load-config
   "Loads the resource config.edn.
   Throws an exception if the resource was not found. "
