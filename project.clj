@@ -12,7 +12,8 @@
                  [mount "0.1.12"]
                  [cheshire "5.8.0"]]
   :plugins [[lein-ring "0.9.7"]]
-  :ring {:handler asset-overview.handler/app}
+  :ring {:handler asset-overview.handler/app
+         :init mount.core/start}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]]}})
