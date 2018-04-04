@@ -1,6 +1,6 @@
 (ns asset-overview.config
-  (:require [mount.core :refer [defstate]]
-            [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [mount.core :refer [defstate]]))
 
 (defn load-config
   "Loads the resource config.edn.

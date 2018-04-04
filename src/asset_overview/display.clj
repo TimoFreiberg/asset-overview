@@ -1,6 +1,6 @@
 (ns asset-overview.display
-  (:require [irresponsible.thyroid :as thyroid]
-            [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [irresponsible.thyroid :as thyroid]))
 
 (def thymeleaf-resolver
   (thyroid/template-resolver

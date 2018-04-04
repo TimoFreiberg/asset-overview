@@ -1,10 +1,9 @@
 (ns asset-overview.handler
-  (:require [compojure.core :as comp]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+  (:require [asset-overview.display :as display]
             [asset-overview.repository :as repo]
-            [asset-overview.display :as display]))
-
+            [compojure.core :as comp]
+            [compojure.route :as route]
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
 
 (defn display-all-projects []
   (display/display-projects (repo/get-all-projects)))
