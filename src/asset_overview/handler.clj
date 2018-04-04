@@ -6,7 +6,8 @@
             [clojure.java.io :as io]
             [mount.core :as mount :refer [defstate]]
             [clj-time.core :as time]
-            [clj-jgit.porcelain :as git]))
+            [clj-jgit.porcelain :as git]
+            [cheshire.core :as json]))
 
 (defn mk-example-project
   [id]
@@ -54,6 +55,17 @@
 
 (defstate up-to-date-repository
   :start {:repo {}})
+(defn get-filtered-projects
+  "Loads projects from the repository that match the given predicate"
+  [pred]
+  (->> repo-data
+       (filter #(.endsWith (.getName %) ".project"))
+       (map
+        #(-> %
+             io/reader
+             (json/parse-stream true)
+             (assoc :id (trim-extension %))))
+       (filter pred)))
 
 (defn get-all-projects
   "Loads all projects from the repository."

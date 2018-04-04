@@ -9,7 +9,8 @@
                  [org.clojure/tools.logging "0.4.0"]
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [clj-jgit "0.8.10"]
-                 [mount "0.1.12"]]
+                 [mount "0.1.12"]
+                 [cheshire "5.8.0"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler asset-overview.handler/app}
   :profiles
