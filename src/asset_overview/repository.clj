@@ -12,7 +12,6 @@
                       (into-array
                        java.nio.file.attribute.FileAttribute
                        []))
-                     .toFile
                      io/file)
         _ (.deleteOnExit temp-dir)]
     temp-dir))
@@ -27,8 +26,7 @@
                        (git/git-clone-full temp-repo-dir)
                        :repo)]
            {:repo repo
-            :dir temp-repo-dir})
-  :stop (io/delete-file (:dir git-repo)))
+            :dir temp-repo-dir}))
 
 (defstate
   ^{:on-reload :noop}
