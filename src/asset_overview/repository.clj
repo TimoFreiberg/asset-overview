@@ -75,3 +75,9 @@
   [id]
   (first
    (get-filtered-projects #(= id (:id %)))))
+
+(defn ensure-repo-is-up-to-date
+  "If last update timestamp is more than max-age-in-minutes old, updates the repo"
+  [max-age-in-minutes]
+  ;;TODO implement!
+  nil)
