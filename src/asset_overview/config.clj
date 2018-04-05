@@ -6,15 +6,12 @@
   "Loads the resource config.edn.
   Throws an exception if the resource was not found. "
   [file-name]
-  (with-open
-    [reader
-     (if-let [resource (io/resource file-name)]
-       (-> resource
-           io/reader
-           java.io.PushbackReader.)
-       (throw (ex-info
-               (str "Resource " file-name " not found"))))]
-    (clojure.edn/read reader)))
+  (if-let [resource (io/resource file-name)]
+    (-> resource
+        slurp
+        clojure.edn/read-string)
+    (throw (ex-info
+            (str "Resource " file-name " not found")))))
 
 (defstate config
   :start (load-config "config.edn"))
