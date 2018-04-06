@@ -6,9 +6,11 @@
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
 
 (defn display-all-projects []
+  (repo/ensure-repo-is-up-to-date)
   (display/display-projects (repo/get-all-projects)))
 
 (defn display-project [id]
+  (repo/ensure-repo-is-up-to-date)
   (-> id
       repo/get-project
       display/display-project))
