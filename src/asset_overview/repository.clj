@@ -13,6 +13,7 @@
                       (into-array
                        java.nio.file.attribute.FileAttribute
                        []))
+                     .toFile
                      io/file)
         _ (.deleteOnExit temp-dir)]
     temp-dir))
@@ -56,6 +57,7 @@
   "Loads projects from the repository that match the given predicate"
   [pred]
   (->> up-to-date-repo
+       :files
        (filter #(.endsWith (.getName %) ".project"))
        (map
         #(-> %
@@ -80,10 +82,10 @@
 
 (defn ensure-repo-is-up-to-date
   "If last update timestamp is more than max-age-in-minutes old, updates the repo"
-  [max-age-in-minutes]
+  [max-age-interval]
   (when (time/before? (time/plus
                        (:updated-at up-to-date-repo)
-                       (time/minutes max-age-in-minutes))
+                       max-age-interval)
                       (time/instant))
     (do
       (doto #'up-to-date-repo

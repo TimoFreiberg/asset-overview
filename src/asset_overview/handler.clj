@@ -3,14 +3,15 @@
             [asset-overview.repository :as repo]
             [compojure.core :as comp]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [java-time :as time]))
 
 (defn display-all-projects []
-  (repo/ensure-repo-is-up-to-date)
+  (repo/ensure-repo-is-up-to-date (time/hours 1))
   (display/display-projects (repo/get-all-projects)))
 
 (defn display-project [id]
-  (repo/ensure-repo-is-up-to-date)
+  (repo/ensure-repo-is-up-to-date (time/hours 1))
   (-> id
       repo/get-project
       display/display-project))
