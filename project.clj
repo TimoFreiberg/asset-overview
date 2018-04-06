@@ -10,7 +10,8 @@
                  [ch.qos.logback/logback-classic "1.1.3"]
                  [clj-jgit "0.8.10"]
                  [mount "0.1.12"]
-                 [cheshire "5.8.0"]]
+                 [cheshire "5.8.0"]
+                 [clojure.java-time "0.3.2"]]
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler asset-overview.handler/app
          :init mount.core/start}

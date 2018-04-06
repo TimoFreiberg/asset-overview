@@ -3,6 +3,7 @@
             [cheshire.core :as json]
             [clj-jgit.porcelain :as git]
             [clojure.java.io :as io]
+            [java-time :as time]
             [mount.core :as mount :refer [defstate]]))
 
 (defn create-temp-dir
@@ -30,14 +31,15 @@
 
 (defstate
   ^{:on-reload :noop}
-  repo-data
+  up-to-date-repo
   :start (do
-           (doto (git-repo :repo)
+           (doto (:repo git-repo)
              (git/git-fetch "origin")
              (git/git-checkout "master"))
-           (-> git-repo
-               :dir
-               file-seq)))
+           {:files (-> git-repo
+                       :dir
+                       file-seq)
+            :updated-at (time/instant)}))
 
 (defn trim-extension
   "Returns the file name of a file without its extension.
@@ -53,7 +55,7 @@
 (defn get-filtered-projects
   "Loads projects from the repository that match the given predicate"
   [pred]
-  (->> repo-data
+  (->> up-to-date-repo
        (filter #(.endsWith (.getName %) ".project"))
        (map
         #(-> %
@@ -79,5 +81,12 @@
 (defn ensure-repo-is-up-to-date
   "If last update timestamp is more than max-age-in-minutes old, updates the repo"
   [max-age-in-minutes]
-  ;;TODO implement!
-  nil)
+  (when (time/before? (time/plus
+                       (:updated-at up-to-date-repo)
+                       (time/minutes max-age-in-minutes))
+                      (time/instant))
+    (do
+      (doto #'up-to-date-repo
+        (mount/stop)
+        (mount/start))
+      (println "Updated Repository"))))
